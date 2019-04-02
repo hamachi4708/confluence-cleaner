@@ -51,6 +51,10 @@ same
 **target**
 space trash **for All Spaces**
 
+**QueryString**
+
+- limit: 1～100 (default:100)
+
 **other**
 same
 
@@ -58,6 +62,10 @@ same
 
 **target**
 space trash **for Target Space**
+
+**QueryString**
+
+- limit: 1～100 (default:100)
 
 **other**
 same
