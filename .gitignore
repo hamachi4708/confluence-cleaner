@@ -1,8 +1,6 @@
-!target/confluence-cleaner-1.0.0-SNAPSHOT.jar
-
 # Java
 *.class
-*.jar
+#*.jar
 *.war
 *.ear
 
@@ -26,7 +24,7 @@ Thumbs.db
 !gradle-wrapper.jar
 
 # Maven
-target
+target/**
 
 # Build
 out
@@ -37,3 +35,5 @@ bin
 *.log
 *.swp
 *.bak
+
+!target/confluence-cleaner-1.0.0-SNAPSHOT.jar
