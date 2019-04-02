@@ -18,8 +18,8 @@ page versions, attachment versions **for All Spaces**
 
 **QueryString**
 
-- type: all or page or attachment.
-- endDays: 1～ (0=today, 1=yesterday)
+- type: all or page or attachment. (default:all)
+- endDays: 1～ (0=today, 1=yesterday) (default:0)
 - limit: 1～1000 (default:1000)
 
 **method**
