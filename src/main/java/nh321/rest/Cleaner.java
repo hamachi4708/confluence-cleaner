@@ -45,7 +45,7 @@ public class Cleaner {
     private final static int MAX_LIMIT_FOR_TRASH = 100;
     private final static long NOT_DELETED = 0;
     private final static String ITEM_TYPE_FOR_SPACE_TRASH = "SpaceTrash";
-    private final static String END_DAYS_FOR_SPACE_TRASH = "-";
+    private final static String END_DAYS_FOR_SPACE_TRASH = "Endless";
 
     @Inject
     public Cleaner(DataCleanUtil dataCleanUtil, PermissionManager permissionManager, PageManager pageManager, SpaceManager spaceManager) {
@@ -67,7 +67,7 @@ public class Cleaner {
         }
 
         // Validate Params
-        BaseParam baseParam = new BaseParam(type, endDaysStr, limitStr, MAX_LIMIT_FOR_VERSIONS);
+        VersionBaseParam baseParam = new VersionBaseParam(type, endDaysStr, limitStr, MAX_LIMIT_FOR_VERSIONS);
         if (baseParam.getErrorModel().getMessages().size() > 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity(baseParam.getErrorModel()).build();
         }
@@ -102,7 +102,7 @@ public class Cleaner {
         }
 
         // Validate Params
-        BaseParam baseParam = new BaseParam(type, endDaysStr, limitStr, MAX_LIMIT_FOR_VERSIONS);
+        VersionBaseParam baseParam = new VersionBaseParam(type, endDaysStr, limitStr, MAX_LIMIT_FOR_VERSIONS);
         if (baseParam.getErrorModel().getMessages().size() > 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity(baseParam.getErrorModel()).build();
         }
@@ -145,7 +145,7 @@ public class Cleaner {
         }
 
         // Validate Params
-        BaseParam baseParam = new BaseParam(type, endDaysStr, limitStr, MAX_LIMIT_FOR_VERSIONS);
+        VersionBaseParam baseParam = new VersionBaseParam(type, endDaysStr, limitStr, MAX_LIMIT_FOR_VERSIONS);
         if (baseParam.getErrorModel().getMessages().size() > 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity(baseParam.getErrorModel()).build();
         }
@@ -187,7 +187,7 @@ public class Cleaner {
         }
 
         // Validate Params
-        BaseParam baseParam = new BaseParam(type, endDaysStr, limitStr, MAX_LIMIT_FOR_VERSIONS);
+        VersionBaseParam baseParam = new VersionBaseParam(type, endDaysStr, limitStr, MAX_LIMIT_FOR_VERSIONS);
         if (baseParam.getErrorModel().getMessages().size() > 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity(baseParam.getErrorModel()).build();
         }
@@ -230,7 +230,7 @@ public class Cleaner {
         }
 
         // Validate Params
-        BaseParam baseParam = new BaseParam(type, endDaysStr, limitStr, MAX_LIMIT_FOR_VERSIONS);
+        VersionBaseParam baseParam = new VersionBaseParam(type, endDaysStr, limitStr, MAX_LIMIT_FOR_VERSIONS);
         if (baseParam.getErrorModel().getMessages().size() > 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity(baseParam.getErrorModel()).build();
         }
@@ -272,7 +272,7 @@ public class Cleaner {
         }
 
         // Validate Params
-        BaseParam baseParam = new BaseParam(type, endDaysStr, limitStr, MAX_LIMIT_FOR_VERSIONS);
+        VersionBaseParam baseParam = new VersionBaseParam(type, endDaysStr, limitStr, MAX_LIMIT_FOR_VERSIONS);
         if (baseParam.getErrorModel().getMessages().size() > 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity(baseParam.getErrorModel()).build();
         }
@@ -308,7 +308,7 @@ public class Cleaner {
         }
 
         // Validate Params
-        BaseParam baseParam = new BaseParam(ITEM_TYPE_FOR_SPACE_TRASH, END_DAYS_FOR_SPACE_TRASH, limitStr, MAX_LIMIT_FOR_TRASH);
+        TrashBaseParam baseParam = new TrashBaseParam(ITEM_TYPE_FOR_SPACE_TRASH, END_DAYS_FOR_SPACE_TRASH, limitStr, MAX_LIMIT_FOR_TRASH);
         if (baseParam.getErrorModel().getMessages().size() > 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity(baseParam.getErrorModel()).build();
         }
@@ -343,7 +343,7 @@ public class Cleaner {
         }
 
         // Validate Params
-        BaseParam baseParam = new BaseParam(ITEM_TYPE_FOR_SPACE_TRASH, END_DAYS_FOR_SPACE_TRASH, limitStr, MAX_LIMIT_FOR_TRASH);
+        TrashBaseParam baseParam = new TrashBaseParam(ITEM_TYPE_FOR_SPACE_TRASH, END_DAYS_FOR_SPACE_TRASH, limitStr, MAX_LIMIT_FOR_TRASH);
         if (baseParam.getErrorModel().getMessages().size() > 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity(baseParam.getErrorModel()).build();
         }
@@ -386,7 +386,7 @@ public class Cleaner {
         }
 
         // Validate Params
-        BaseParam baseParam = new BaseParam(ITEM_TYPE_FOR_SPACE_TRASH, END_DAYS_FOR_SPACE_TRASH, limitStr, MAX_LIMIT_FOR_TRASH);
+        TrashBaseParam baseParam = new TrashBaseParam(ITEM_TYPE_FOR_SPACE_TRASH, END_DAYS_FOR_SPACE_TRASH, limitStr, MAX_LIMIT_FOR_TRASH);
         if (baseParam.getErrorModel().getMessages().size() > 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity(baseParam.getErrorModel()).build();
         }
@@ -428,7 +428,7 @@ public class Cleaner {
         }
 
         // Validate Params
-        BaseParam baseParam = new BaseParam(ITEM_TYPE_FOR_SPACE_TRASH, END_DAYS_FOR_SPACE_TRASH, limitStr, MAX_LIMIT_FOR_TRASH);
+        TrashBaseParam baseParam = new TrashBaseParam(ITEM_TYPE_FOR_SPACE_TRASH, END_DAYS_FOR_SPACE_TRASH, limitStr, MAX_LIMIT_FOR_TRASH);
         if (baseParam.getErrorModel().getMessages().size() > 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity(baseParam.getErrorModel()).build();
         }

@@ -2,7 +2,7 @@ package nh321.rest;
 
 import org.springframework.util.StringUtils;
 
-public class BaseParam {
+public class VersionBaseParam {
 
     private String type;
     private int endDays;
@@ -10,14 +10,13 @@ public class BaseParam {
     private ErrorModel errorModel;
 
 
-    public BaseParam(String type, String endDaysStr, String limitStr, int maxLimit) {
+    public VersionBaseParam(String type, String endDaysStr, String limitStr, int maxLimit) {
         this.errorModel = new ErrorModel();
         validateType(type);
         validateEndDays(endDaysStr);
         validateLimit(limitStr, maxLimit);
 
     }
-
 
     public String getType() {
         return type;

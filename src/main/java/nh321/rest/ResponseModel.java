@@ -12,7 +12,7 @@ public class ResponseModel {
     @XmlElement
     public String itemType;
     @XmlElement
-    public int endDays;
+    public String endDays;
     @XmlElement
     public int itemCountLimit;
     @XmlElement
@@ -26,7 +26,17 @@ public class ResponseModel {
 
     public ResponseModel(String itemType, int endDays, int itemCountLimit, int targetItemCount, long deletedItemCount, long deletedVersionCount, Object result) {
         this.itemType = itemType;
-        this.endDays = endDays;
+        this.endDays = String.valueOf(endDays);
+        this.itemCountLimit = itemCountLimit;
+        this.targetItemCount = targetItemCount;
+        this.deletedItemCount = deletedItemCount;
+        this.deletedVersionCount = deletedVersionCount;
+        this.result = result;
+    }
+
+    public ResponseModel(String itemType, String endDaysStr, int itemCountLimit, int targetItemCount, long deletedItemCount, long deletedVersionCount, Object result) {
+        this.itemType = itemType;
+        this.endDays = endDaysStr;
         this.itemCountLimit = itemCountLimit;
         this.targetItemCount = targetItemCount;
         this.deletedItemCount = deletedItemCount;
@@ -42,11 +52,11 @@ public class ResponseModel {
         this.itemType = itemType;
     }
 
-    public int getEndDays() {
+    public String getEndDays() {
         return endDays;
     }
 
-    public void setEndDays(int endDays) {
+    public void setEndDays(String endDays) {
         this.endDays = endDays;
     }
 
