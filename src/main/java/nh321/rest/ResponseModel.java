@@ -10,33 +10,36 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class ResponseModel {
 
     @XmlElement
-    public String type;
+    public String itemType;
     @XmlElement
     public int endDays;
     @XmlElement
-    public int limit;
+    public int itemCountLimit;
     @XmlElement
-    public long targetCount;
+    public int targetItemCount;
     @XmlElement
-    public long deletedCount;
+    public long deletedItemCount;
+    @XmlElement
+    public long deletedVersionCount;
     @XmlElement
     public Object result;
 
-    public ResponseModel(String type, int endDays, int limit, long targetCount, long deletedCount, Object result) {
-        this.type = type;
+    public ResponseModel(String itemType, int endDays, int itemCountLimit, int targetItemCount, long deletedItemCount, long deletedVersionCount, Object result) {
+        this.itemType = itemType;
         this.endDays = endDays;
-        this.limit = limit;
-        this.targetCount = targetCount;
-        this.deletedCount = deletedCount;
+        this.itemCountLimit = itemCountLimit;
+        this.targetItemCount = targetItemCount;
+        this.deletedItemCount = deletedItemCount;
+        this.deletedVersionCount = deletedVersionCount;
         this.result = result;
     }
 
-    public String getType() {
-        return type;
+    public String getItemType() {
+        return itemType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setItemType(String itemType) {
+        this.itemType = itemType;
     }
 
     public int getEndDays() {
@@ -47,28 +50,36 @@ public class ResponseModel {
         this.endDays = endDays;
     }
 
-    public int getLimit() {
-        return limit;
+    public int getItemCountLimit() {
+        return itemCountLimit;
     }
 
-    public void setLimit(int limit) {
-        this.limit = limit;
+    public void setItemCountLimit(int itemCountLimit) {
+        this.itemCountLimit = itemCountLimit;
     }
 
-    public long getTargetCount() {
-        return targetCount;
+    public long getTargetItemCount() {
+        return targetItemCount;
     }
 
-    public void setTargetCount(long targetCount) {
-        this.targetCount = targetCount;
+    public void setTargetItemCount(int targetItemCount) {
+        this.targetItemCount = targetItemCount;
     }
 
-    public long getDeletedCount() {
-        return deletedCount;
+    public long getDeletedItemCount() {
+        return deletedItemCount;
     }
 
-    public void setDeletedCount(long deletedCount) {
-        this.deletedCount = deletedCount;
+    public void setDeletedItemCount(long deletedItemCount) {
+        this.deletedItemCount = deletedItemCount;
+    }
+
+    public long getDeletedVersionCount() {
+        return deletedVersionCount;
+    }
+
+    public void setDeletedVersionCount(long deletedVersionCount) {
+        this.deletedVersionCount = deletedVersionCount;
     }
 
     public Object getResult() {

@@ -44,6 +44,8 @@ public class Cleaner {
     private final static int MAX_LIMIT_FOR_VERSIONS = 1000;
     private final static int MAX_LIMIT_FOR_TRASH = 100;
     private final static long NOT_DELETED = 0;
+    private final static String ITEM_TYPE_FOR_SPACE_TRASH = "SpaceTrash";
+    private final static String END_DAYS_FOR_SPACE_TRASH = "-";
 
     @Inject
     public Cleaner(DataCleanUtil dataCleanUtil, PermissionManager permissionManager, PageManager pageManager, SpaceManager spaceManager) {
@@ -83,6 +85,7 @@ public class Cleaner {
                 baseParam.getLimit(),
                 this.dataCleanUtil.getCount(),
                 NOT_DELETED,
+                NOT_DELETED,
                 spaceModels);
         return Response.ok(responseModel).build();
     }
@@ -116,6 +119,7 @@ public class Cleaner {
                 baseParam.getType(),
                 baseParam.getEndDays(),
                 baseParam.getLimit(),
+                this.dataCleanUtil.getCount(),
                 this.dataCleanUtil.getCount(),
                 deleted,
                 new MessageModel("Deleted Versions Count - " + deleted));
@@ -159,6 +163,7 @@ public class Cleaner {
                 baseParam.getLimit(),
                 this.dataCleanUtil.getCount(),
                 NOT_DELETED,
+                NOT_DELETED,
                 spaceVersionModel);
         return Response.ok(responseModel).build();
     }
@@ -199,6 +204,7 @@ public class Cleaner {
                 baseParam.getType(),
                 baseParam.getEndDays(),
                 baseParam.getLimit(),
+                this.dataCleanUtil.getCount(),
                 this.dataCleanUtil.getCount(),
                 deleted,
                 new MessageModel("Deleted Versions Count - " + deleted));
@@ -242,6 +248,7 @@ public class Cleaner {
                 baseParam.getLimit(),
                 this.dataCleanUtil.getCount(),
                 NOT_DELETED,
+                NOT_DELETED,
                 pageVersionsModel);
         return Response.ok(responseModel).build();
     }
@@ -283,6 +290,7 @@ public class Cleaner {
                 baseParam.getEndDays(),
                 baseParam.getLimit(),
                 this.dataCleanUtil.getCount(),
+                this.dataCleanUtil.getCount(),
                 deleted,
                 new MessageModel("Deleted Versions Count - " + deleted));
         return Response.ok(responseModel).build();
@@ -300,7 +308,7 @@ public class Cleaner {
         }
 
         // Validate Params
-        BaseParam baseParam = new BaseParam(limitStr, MAX_LIMIT_FOR_TRASH);
+        BaseParam baseParam = new BaseParam(ITEM_TYPE_FOR_SPACE_TRASH, END_DAYS_FOR_SPACE_TRASH, limitStr, MAX_LIMIT_FOR_TRASH);
         if (baseParam.getErrorModel().getMessages().size() > 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity(baseParam.getErrorModel()).build();
         }
@@ -318,6 +326,7 @@ public class Cleaner {
                 baseParam.getLimit(),
                 this.dataCleanUtil.getCount(),
                 NOT_DELETED,
+                NOT_DELETED,
                 trashModels);
         return Response.ok(responseModel).build();
     }
@@ -334,7 +343,7 @@ public class Cleaner {
         }
 
         // Validate Params
-        BaseParam baseParam = new BaseParam(limitStr, MAX_LIMIT_FOR_TRASH);
+        BaseParam baseParam = new BaseParam(ITEM_TYPE_FOR_SPACE_TRASH, END_DAYS_FOR_SPACE_TRASH, limitStr, MAX_LIMIT_FOR_TRASH);
         if (baseParam.getErrorModel().getMessages().size() > 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity(baseParam.getErrorModel()).build();
         }
@@ -351,6 +360,7 @@ public class Cleaner {
                 baseParam.getType(),
                 baseParam.getEndDays(),
                 baseParam.getLimit(),
+                this.dataCleanUtil.getCount(),
                 this.dataCleanUtil.getCount(),
                 deleted,
                 new MessageModel("Deleted Trash Items Count - " + deleted));
@@ -376,7 +386,7 @@ public class Cleaner {
         }
 
         // Validate Params
-        BaseParam baseParam = new BaseParam(limitStr, MAX_LIMIT_FOR_TRASH);
+        BaseParam baseParam = new BaseParam(ITEM_TYPE_FOR_SPACE_TRASH, END_DAYS_FOR_SPACE_TRASH, limitStr, MAX_LIMIT_FOR_TRASH);
         if (baseParam.getErrorModel().getMessages().size() > 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity(baseParam.getErrorModel()).build();
         }
@@ -393,6 +403,7 @@ public class Cleaner {
                 baseParam.getEndDays(),
                 baseParam.getLimit(),
                 this.dataCleanUtil.getCount(),
+                NOT_DELETED,
                 NOT_DELETED,
                 spaceTrashModel);
         return Response.ok(responseModel).build();
@@ -417,7 +428,7 @@ public class Cleaner {
         }
 
         // Validate Params
-        BaseParam baseParam = new BaseParam(limitStr, MAX_LIMIT_FOR_TRASH);
+        BaseParam baseParam = new BaseParam(ITEM_TYPE_FOR_SPACE_TRASH, END_DAYS_FOR_SPACE_TRASH, limitStr, MAX_LIMIT_FOR_TRASH);
         if (baseParam.getErrorModel().getMessages().size() > 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity(baseParam.getErrorModel()).build();
         }
@@ -435,6 +446,7 @@ public class Cleaner {
                 baseParam.getType(),
                 baseParam.getEndDays(),
                 baseParam.getLimit(),
+                this.dataCleanUtil.getCount(),
                 this.dataCleanUtil.getCount(),
                 deleted,
                 new MessageModel("Deleted Trash Items Count - " + deleted));

@@ -18,11 +18,6 @@ public class BaseParam {
 
     }
 
-    public BaseParam(String limitStr, int maxLimit) {
-        this.errorModel = new ErrorModel();
-        validateLimit(limitStr, maxLimit);
-    }
-
 
     public String getType() {
         return type;
