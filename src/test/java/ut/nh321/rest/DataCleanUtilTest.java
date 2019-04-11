@@ -77,64 +77,6 @@ public class DataCleanUtilTest {
     }
 
     @RunWith (MockitoJUnitRunner.class)
-    public static class removeAttachmentVersions {
-        @Mock
-        private PageManager pageManager;
-        @Mock
-        private AttachmentManager attachmentManager;
-        @Mock
-        private TrashManager trashManager;
-        @Mock
-        private SpaceManager spaceManager;
-        @Mock
-        private DateTimeUtil dateTimeUtil;
-        private DataCleanUtil dataCleanUtil;
-        private Attachment attachmentMain;
-
-        @Before
-        public void setup() {
-            // Base date
-            Calendar c = Calendar.getInstance();
-            c.set(2015, 3, 5); // 2015/04/05
-            Date date = c.getTime();
-            when(dateTimeUtil.getDate()).thenReturn(date);
-
-            List<Attachment> vAttachments = new ArrayList<Attachment>();
-            this.attachmentMain = new Attachment();
-            Attachment attachmentAfter = new Attachment();
-            Attachment attachmentBefore = new Attachment();
-
-            // after
-            Calendar cA = Calendar.getInstance();
-            cA.set(2015, 3, 5);
-            Date dateA = cA.getTime();
-            attachmentAfter.setId(20150405L);
-            attachmentAfter.setLastModificationDate(dateA);
-            vAttachments.add(attachmentAfter);
-            doNothing().when(attachmentManager).removeAttachmentVersionFromServer(attachmentAfter);
-
-            // before(delete target)
-            Calendar cB = Calendar.getInstance();
-            cB.set(2015, 3, 1);
-            Date dateB = cB.getTime();
-            attachmentBefore.setId(20150401L);
-            attachmentBefore.setLastModificationDate(dateB);
-            vAttachments.add(attachmentBefore);
-            doNothing().when(attachmentManager).removeAttachmentVersionFromServer(attachmentBefore);
-
-            when(attachmentManager.getPreviousVersions(attachmentMain)).thenReturn(vAttachments);
-
-            this.dataCleanUtil = new DataCleanUtilImpl(pageManager, attachmentManager, trashManager, spaceManager, dateTimeUtil);
-        }
-
-        @Test
-        public void main() {
-            int endDays = 2;
-            assertEquals("DeleteError!!", 1L, dataCleanUtil.removeAttachmentVersions(attachmentMain, endDays));
-        }
-    }
-
-    @RunWith (MockitoJUnitRunner.class)
     public static class removePageVersions {
         @Mock
         private PageManager pageManager;

@@ -8,7 +8,6 @@ import com.atlassian.confluence.pages.Attachment;
 import com.atlassian.confluence.pages.Page;
 import com.atlassian.confluence.spaces.Space;
 
-import nh321.rest.AttachmentModel;
 import nh321.rest.PageVersionsModel;
 import nh321.rest.SpaceTrashModel;
 import nh321.rest.SpaceVersionsModel;
@@ -16,9 +15,11 @@ import nh321.rest.SpaceVersionsModel;
 public interface DataCleanUtil {
     public abstract Date getCreatedOrUpdatedDate(int paramInt);
 
-    public abstract long removeAttachmentVersions(Attachment paramAttachment, int paramInt);
+    public abstract List<Attachment> getAttachmentVersions(Attachment attachment, int endDays);
 
-    public abstract long removePageVersions(AbstractPage paramAbstractPage, int paramInt, String paramString);
+    public abstract List<AbstractPage> getPageVersions(Page page, int endDays, String type);
+
+    public abstract long removePageVersions(Page paramPage, int paramInt, String paramString);
 
     public abstract long removeSpaceVersions(Space paramSpace, int paramInt, String paramString);
 
@@ -28,9 +29,7 @@ public interface DataCleanUtil {
 
     public abstract long removeAllTrash();
 
-    public abstract AttachmentModel getAttachmentVersionSummary(Attachment paramAttachment, int paramInt);
-
-    public abstract PageVersionsModel getPageVersionSummary(Page paramPage, int paramInt, String paramString);
+    public abstract PageVersionsModel getPageVersionSummary(Page page, int endDays, String type);
 
     public abstract SpaceVersionsModel getSpaceVersionSummary(Space paramSpace, int paramInt, String paramString);
 

@@ -78,49 +78,62 @@ public class DataCleanUtilImpl implements DataCleanUtil {
     }
 
     @Override
-    public long removeAttachmentVersions(Attachment attachment, int endDays) {
+    public List<Attachment> getAttachmentVersions(Attachment attachment, int endDays) {
+        List<Attachment> resultAttachments = new ArrayList<Attachment>();
         Date lastUpdatedOrCreatedDate = getCreatedOrUpdatedDate(endDays);
         List<Attachment> vAttachments = this.attachmentManager.getPreviousVersions(attachment);
-        long delete_index = 0;
 
         for (Attachment vAttachment : vAttachments) {
             if (vAttachment.getLastModificationDate().before(lastUpdatedOrCreatedDate)) {
-                this.attachmentManager.removeAttachmentVersionFromServer(vAttachment);
-                delete_index++;
+                resultAttachments.add(vAttachment);
           }
         }
 
-        return delete_index;
+        return resultAttachments;
     }
 
     @Override
-    public long removePageVersions(AbstractPage page, int endDays, String type) {
+    public List<AbstractPage> getPageVersions(Page page, int endDays, String type) {
+        List<AbstractPage> resultVersions = new ArrayList<AbstractPage>();
+        Date lastUpdatedOrCreatedDate = getCreatedOrUpdatedDate(endDays);
+        List<VersionHistorySummary> versions = this.pageManager.getVersionHistorySummaries(page);
+
+        for (VersionHistorySummary vSummary : versions) {
+            if (page.getId() != vSummary.getId() && vSummary.getLastModificationDate().before(lastUpdatedOrCreatedDate)) {
+                AbstractPage vPage = this.pageManager.getPage(vSummary.getId());
+                if (vPage == null) {
+                    vPage = this.pageManager.getBlogPost(vSummary.getId());
+
+                }
+                if (vPage != null) {
+                    resultVersions.add(vPage);
+                }
+            }
+        }
+
+        return resultVersions;
+    }
+
+    @Override
+    public long removePageVersions(Page page, int endDays, String type) {
         long delete_index = 0;
         if (this.count >= this.limit) {
             return delete_index;
         }
-        Date lastUpdatedOrCreatedDate = getCreatedOrUpdatedDate(endDays);
 
         if ("all".equals(type) || "page".equals(type)) {
-            List<VersionHistorySummary> versions = this.pageManager.getVersionHistorySummaries(page);
+            List<AbstractPage> aPages = getPageVersions(page, endDays, type);
 
-            for (VersionHistorySummary vSummary : versions) {
-                if (page.getId() != vSummary.getId() && vSummary.getLastModificationDate().before(lastUpdatedOrCreatedDate)) {
-                    AbstractPage vPage = this.pageManager.getPage(vSummary.getId());
-                    if (vPage == null) {
-                        vPage = this.pageManager.getBlogPost(vSummary.getId());
-
-                    }
-                    if (vPage != null) {
-                        this.pageManager.removeHistoricalVersion(vPage);
-                        delete_index++;
-                    }
-                }
+            for (AbstractPage aPage : aPages) {
+                this.pageManager.removeHistoricalVersion(aPage);
+                delete_index++;
             }
 
-            this.count++;
-            if (this.count >= this.limit) {
-                return delete_index;
+            if (delete_index > 0) {
+                this.count++;
+                if (this.count >= this.limit) {
+                    return delete_index;
+                }
             }
         }
 
@@ -128,11 +141,18 @@ public class DataCleanUtilImpl implements DataCleanUtil {
             List<Attachment> attachments = attachmentManager.getLatestVersionsOfAttachments(page);
 
             for (Attachment attachment : attachments) {
-                delete_index += removeAttachmentVersions(attachment, endDays);
+                List<Attachment> targetAttachments = getAttachmentVersions(attachment, endDays);
 
-                this.count++;
-                if (this.count >= this.limit) {
-                    return delete_index;
+                for (Attachment targetAttachment : targetAttachments) {
+                    this.attachmentManager.removeAttachmentVersionFromServer(targetAttachment);
+                    delete_index++;
+                }
+
+                if (targetAttachments.size() > 0) {
+                    this.count++;
+                    if (this.count >= this.limit) {
+                        return delete_index;
+                    }
                 }
             }
         }
@@ -143,8 +163,7 @@ public class DataCleanUtilImpl implements DataCleanUtil {
     @Override
     public long removeSpaceVersions(Space space, int endDays, String type) {
         Date lastUpdatedOrCreatedDate = getCreatedOrUpdatedDate(endDays);
-        @SuppressWarnings("unchecked")
-        Collection<Page> pages = this.pageManager.getPermissionPages(space);
+        Collection<Page> pages = this.pageManager.getPages(space, true);
         long delete_index = 0L;
 
         for (Page page : pages) {
@@ -196,61 +215,24 @@ public class DataCleanUtilImpl implements DataCleanUtil {
     }
 
     @Override
-    public AttachmentModel getAttachmentVersionSummary(Attachment attachment, int endDays) {
-        Date lastUpdatedOrCreatedDate = getCreatedOrUpdatedDate(endDays);
-        List<Attachment> vAttachments = this.attachmentManager.getPreviousVersions(attachment);
-        int versionCount = 0;
-
-        for (Attachment vAttachment : vAttachments) {
-            if (vAttachment.getLastModificationDate().before(lastUpdatedOrCreatedDate)) {
-                versionCount++;
-          }
-        }
-
-        String last_modifier = attachment.getLastModifier() != null ? attachment.getLastModifier().getName() : "";
-        AttachmentModel model = new AttachmentModel(
-                attachment.getId(),
-                attachment.getTitle(),
-                versionCount,
-                last_modifier,
-                attachment.getLastModificationDate()
-                );
-
-        return model;
-    }
-
-    @Override
     public PageVersionsModel getPageVersionSummary(Page page, int endDays, String type) {
-        int versionCount = 0;
-        Date lastUpdatedOrCreatedDate = getCreatedOrUpdatedDate(endDays);
-        List<VersionHistorySummary> versions = this.pageManager.getVersionHistorySummaries(page);
-
-        for (VersionHistorySummary vSummary : versions) {
-            if (page.getId() != vSummary.getId() && vSummary.getLastModificationDate().before(lastUpdatedOrCreatedDate)) {
-                AbstractPage vPage = this.pageManager.getPage(vSummary.getId());
-                if (vPage == null) {
-                    vPage = this.pageManager.getBlogPost(vSummary.getId());
-
-                }
-                if (vPage != null) {
-                    versionCount++;
-                }
-            }
+        List<AbstractPage> resultVersions = new ArrayList<AbstractPage>();
+        if ("all".equals(type) || "page".equals(type)) {
+            resultVersions = getPageVersions(page, endDays, type);
         }
-
         PageVersionsModel pageModel = new PageVersionsModel();
         String modifier = page.getLastModifier() != null ? page.getLastModifier().getName() : "";
         pageModel.setId(page.getId());
         pageModel.setTitle(page.getTitle());
-        pageModel.setVersionCount(versionCount);
+        pageModel.setVersionCount(resultVersions.size());
         pageModel.setLastModifier(modifier);
         pageModel.setLastModified(page.getLastModificationDate());
 
-        long totalVersionCount = pageModel.getVersionCount();
+        long totalPageVersionCount = pageModel.getVersionCount();
         if (pageModel.getVersionCount() > 0) {
             this.count++;
             if (this.count >= this.limit) {
-                pageModel.setTotalVersionCount(totalVersionCount);
+                pageModel.setTotalVersionCount(totalPageVersionCount);
                 return pageModel;
 
             }
@@ -258,15 +240,25 @@ public class DataCleanUtilImpl implements DataCleanUtil {
 
         if ("all".equals(type) || "attachment".equals(type)) {
             List<Attachment> attachments = attachmentManager.getLatestVersionsOfAttachments(page);
+            List<Attachment> attachmentVersions = new ArrayList<Attachment>();
             List<AttachmentModel> attachmentModels = new ArrayList<AttachmentModel>();
 
             for (Attachment attachment : attachments) {
-                AttachmentModel attachmentModel = getAttachmentVersionSummary(attachment, endDays);
+                List<Attachment> tmpAttachmentVersions = getAttachmentVersions(attachment, endDays);
+                int tmpAttachmentVersionsCount = tmpAttachmentVersions.size();
 
-                if (attachmentModel.getVersionCount() > 0) {
-                    attachmentModels.add(attachmentModel);
-                    totalVersionCount += attachmentModel.getVersionCount();
-
+                if (tmpAttachmentVersionsCount > 0) {
+                    attachmentVersions.addAll(tmpAttachmentVersions);
+                    totalPageVersionCount += tmpAttachmentVersions.size();
+                    String last_modifier = attachment.getLastModifier() != null ? attachment.getLastModifier().getName() : "";
+                    AttachmentModel model = new AttachmentModel(
+                            attachment.getId(),
+                            attachment.getTitle(),
+                            tmpAttachmentVersionsCount,
+                            last_modifier,
+                            attachment.getLastModificationDate()
+                            );
+                    attachmentModels.add(model);
                     this.count++;
                     if (this.count >= this.limit) {
                         break;
@@ -278,8 +270,7 @@ public class DataCleanUtilImpl implements DataCleanUtil {
 
         }
 
-        pageModel.setTotalVersionCount(totalVersionCount);
-
+        pageModel.setTotalVersionCount(totalPageVersionCount);
         return pageModel;
     }
 
@@ -288,20 +279,20 @@ public class DataCleanUtilImpl implements DataCleanUtil {
         Collection<Page> pages = this.pageManager.getPages(space, true);
         List<PageVersionsModel> pageModels = new ArrayList<PageVersionsModel>();
 
-        long totalVersionCount = 0;
+        long totalSpaceVersionCount = 0;
         for (Page page : pages) {
-            PageVersionsModel pageVersionsModel = getPageVersionSummary(page, endDays, type);
-            if (pageVersionsModel.getTotalVersionCount() > 0) {
-                pageModels.add(pageVersionsModel);
-                totalVersionCount += pageVersionsModel.getTotalVersionCount();
+            PageVersionsModel pageModel = getPageVersionSummary(page, endDays, type);
 
-                if (this.count >= this.limit) {
-                    break;
-                }
+            if (pageModel.getTotalVersionCount() > 0) {
+                totalSpaceVersionCount += pageModel.getTotalVersionCount();
+                pageModels.add(pageModel);
             }
 
+            if (this.count >= this.limit) {
+                break;
+            }
         }
-        SpaceVersionsModel spaceModel = new SpaceVersionsModel(space.getKey(), space.getDisplayTitle(), totalVersionCount, pageModels);
+        SpaceVersionsModel spaceModel = new SpaceVersionsModel(space.getKey(), space.getDisplayTitle(), totalSpaceVersionCount, pageModels);
 
         return spaceModel;
     }
@@ -311,7 +302,10 @@ public class DataCleanUtilImpl implements DataCleanUtil {
         List<SpaceVersionsModel> spaceModels = new ArrayList<SpaceVersionsModel>();
         for (Space space : this.spaceManager.getAllSpaces()) {
             SpaceVersionsModel spaceModel = this.getSpaceVersionSummary(space, endDays, type);
-            spaceModels.add(spaceModel);
+
+            if(spaceModel.getTotalVersionCount() > 0) {
+                spaceModels.add(spaceModel);
+            }
 
             if (this.count >= this.limit) {
                 return spaceModels;
@@ -333,11 +327,15 @@ public class DataCleanUtilImpl implements DataCleanUtil {
         List<SpaceTrashModel> trashModels = new ArrayList<SpaceTrashModel>();
         for (Space space : this.spaceManager.getAllSpaces()) {
             SpaceTrashModel trashModel = this.getSpaceTrashSummary(space);
-            trashModels.add(trashModel);
 
-            this.count++;
-            if (this.count >= this.limit) {
-                return trashModels;
+            if (trashModel.getNumberOfItemsInTrash() > 0) {
+
+                trashModels.add(trashModel);
+
+                this.count++;
+                if (this.count >= this.limit) {
+                    return trashModels;
+                }
             }
         }
         return trashModels;

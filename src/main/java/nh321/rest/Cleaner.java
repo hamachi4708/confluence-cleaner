@@ -197,7 +197,7 @@ public class Cleaner {
         this.dataCleanUtil.setCount(0);
 
         // Main process
-        logger.info(MessageFormat.format("User({0}) deleting versions for spaceKey {1}", new Object[] {loggedInAppUser.getName(), Long.valueOf(spaceKey) }));
+        logger.info(MessageFormat.format("User({0}) deleting versions for spaceKey {1}", new Object[] {loggedInAppUser.getName(), spaceKey }));
         long deleted = this.dataCleanUtil.removeSpaceVersions(space, baseParam.getEndDays(), baseParam.getType());
 
         ResponseModel responseModel = new ResponseModel(
