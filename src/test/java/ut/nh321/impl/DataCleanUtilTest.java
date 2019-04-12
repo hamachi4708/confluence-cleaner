@@ -1,4 +1,4 @@
-package ut.nh321.rest;
+package ut.nh321.impl;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
